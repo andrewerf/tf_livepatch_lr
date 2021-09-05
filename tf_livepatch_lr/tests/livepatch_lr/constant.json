@@ -1,0 +1,6 @@
+{
+  "class_name": "ConstantLrSchedule",
+  "config": {
+    "c": 0.001
+  }
+}

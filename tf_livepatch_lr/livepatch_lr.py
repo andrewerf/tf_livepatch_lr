@@ -29,6 +29,9 @@ class LiveLrSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 		return tf.numpy_function(self.call, [step], tf.float32)
 
 	def load_config(self):
+		"""
+		Tries to load config file and update `base_schedule`. Logs failures with logger.error.
+		"""
 		try:
 			self.lr_file.seek(0)
 			config = json.loads(self.lr_file.read())
