@@ -4,6 +4,7 @@ from tempfile import NamedTemporaryFile
 from pathlib import Path
 
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.optimizers.schedules import LearningRateSchedule
@@ -28,6 +29,7 @@ class ConstantLrSchedule(LearningRateSchedule):
 class TestLiveLrSchedule(TestCase):
 
 	def test_call(self):
+		tf.get_logger().setLevel('INFO')
 		initial_config_file = open(Path('livepatch_lr') / 'polynomial_decay.json')
 		last_config_file = open(Path('livepatch_lr') / 'constant.json')
 
