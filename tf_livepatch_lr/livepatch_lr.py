@@ -27,7 +27,7 @@ class LiveLrSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 		self.custom_objects = custom_objects
 		if not lr_filename.exists():
 			with open(lr_filename, 'w') as file:
-				file.write(serialize(initial_schedule))
+				file.write(json.dumps(serialize(initial_schedule)))
 
 		self.lr_file = open(lr_filename, 'r')
 		self.base_schedule = initial_schedule

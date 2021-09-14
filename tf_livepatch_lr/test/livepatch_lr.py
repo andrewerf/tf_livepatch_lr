@@ -7,7 +7,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.optimizers import SGD
-from tensorflow.keras.optimizers.schedules import LearningRateSchedule
+from tensorflow.keras.optimizers.schedules import LearningRateSchedule, PolynomialDecay
 from tensorflow.keras.callbacks import LambdaCallback
 import tensorflow.keras.layers as layers
 
@@ -28,8 +28,14 @@ class ConstantLrSchedule(LearningRateSchedule):
 
 class TestLiveLrSchedule(TestCase):
 
-	def test_call(self):
+	def setUp(self):
 		tf.get_logger().setLevel('INFO')
+
+	def test_init(self):
+		lr = PolynomialDecay(0.01, 100)
+		lr = LiveLrSchedule(50, initial_schedule=lr)
+
+	def test_call(self):
 		initial_config_file = open(Path('livepatch_lr') / 'polynomial_decay.json')
 		last_config_file = open(Path('livepatch_lr') / 'constant.json')
 
