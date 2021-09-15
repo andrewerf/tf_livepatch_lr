@@ -1,6 +1,6 @@
 import os
 from unittest import TestCase
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 from pathlib import Path
 
 import numpy as np
@@ -30,10 +30,21 @@ class TestLiveLrSchedule(TestCase):
 
 	def setUp(self):
 		tf.get_logger().setLevel('INFO')
+		self.model = Sequential([
+			layers.Dense(1)
+		])
 
 	def test_init(self):
 		lr = PolynomialDecay(0.01, 100)
 		lr = LiveLrSchedule(50, initial_schedule=lr)
+
+	def test_save(self):
+		lr = PolynomialDecay(0.01, 100)
+		lr = LiveLrSchedule(50, initial_schedule=lr)
+		self.model.compile(SGD(lr))
+		self.model(np.ones((1, 1, 1), np.float32))
+		with TemporaryDirectory() as d:
+			self.model.save(d)
 
 	def test_call(self):
 		initial_config_file = open(Path('livepatch_lr') / 'polynomial_decay.json')
@@ -45,9 +56,6 @@ class TestLiveLrSchedule(TestCase):
 
 		self.xs = np.ones((1, 1, 1), np.float32)
 		self.ys = self.xs.copy()
-		self.model = Sequential([
-			layers.Dense(1)
-		])
 
 		def on_epoch_end(epoch, logs):
 			if epoch == 5:

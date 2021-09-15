@@ -12,7 +12,7 @@ tests_require = [
 
 setup(
 	name = 'tf_livepatch_lr',
-	version = '0.0.4',
+	version = '0.0.5',
 	url = 'https://github.com/andrewerf/tf_livepatch_lr',
 	author = 'Andrew Aralov',
 	author_email = 'andrew-aralov@yandex.ru',

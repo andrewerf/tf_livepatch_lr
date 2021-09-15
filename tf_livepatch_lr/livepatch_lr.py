@@ -25,6 +25,7 @@ class LiveLrSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 		self.lr_filename = lr_filename
 		self.check_for_update_interval = check_for_update_interval
 		self.custom_objects = custom_objects
+		self.initial_schedule = initial_schedule
 		if not lr_filename.exists():
 			with open(lr_filename, 'w') as file:
 				file.write(json.dumps(serialize(initial_schedule)))
@@ -34,7 +35,7 @@ class LiveLrSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 		self.logger = tf.get_logger()
 
 	def __call__(self, step):
-		return tf.numpy_function(self.call, [step], tf.float32)
+		return tf.py_function(self.call, [step], tf.float32)
 
 	def load_config(self):
 		"""
@@ -54,3 +55,11 @@ class LiveLrSchedule(tf.keras.optimizers.schedules.LearningRateSchedule):
 			self.load_config()
 
 		return np.float32(self.base_schedule(step))
+
+	def get_config(self):
+		return {
+			'check_for_update_interval': self.check_for_update_interval,
+			'lr_filename': str(self.lr_filename),
+			'custom_objects': self.custom_objects,
+			'initial_schedule': self.initial_schedule
+		}
